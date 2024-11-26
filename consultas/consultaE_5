@@ -1,0 +1,20 @@
+##QUERY 6
+
+##ENUNCIADO: Visando fornecer um levantamento de entrada financeira foi consultado quais são os produtos mais vendidos em cada Unidade da Rede Hoteleira e seus respectivos faturamentos ordenados dos valores mais altos para os mais baixos.
+
+SELECT 
+UNIDADE.nome_fantasia,
+PRODUTO_FRIGOBAR.nome, 
+SUM(PRODUTO_FRIGOBAR.valor) AS faturamento_total_do_produto
+
+FROM CONSOME 
+LEFT JOIN 
+	PRODUTO_FRIGOBAR ON CONSOME.id_produto_frigobar = PRODUTO_FRIGOBAR.id_produto_frigobar
+LEFT JOIN  RESERVA ON CONSOME.id_reserva = RESERVA.id_reserva 
+LEFT JOIN  CLIENTE ON CLIENTE.id_cliente = RESERVA.id_cliente
+LEFT JOIN  ACOMODACAO ON ACOMODACAO.id_acomodacao = PRODUTO_FRIGOBAR.id_acomodacao
+LEFT JOIN  UNIDADE ON ACOMODACAO.id_unidade = UNIDADE.id_unidade
+
+GROUP BY UNIDADE.nome_fantasia, PRODUTO_FRIGOBAR.nome
+ORDER BY UNIDADE.nome_fantasia, SUM(PRODUTO_FRIGOBAR.valor) DESC, PRODUTO_FRIGOBAR.nome
+

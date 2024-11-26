@@ -1,0 +1,12 @@
+##QUERY 3
+
+##ENUNCIADO:Para a devida administração das atividades que ocorrem no hotel é necessário um levantamento dos equipamentos utilizados em cada atividades e o estado dosmesmos, para que, se preciso, novos equipamentos sejam repostos.
+Assim, o gerente geral pede um relatório para o gerente de atividades pedindo um levantamento dos quipamentos que estão comprometidos ou com desgaste relevante e as suas respectivas atividades.
+
+SELECT  
+	ATIVIDADE.nome AS atividade, EQUIPAMENTO.nome AS equipamento,
+	EQUIPAMENTO.quantidade, EQUIPAMENTO.desgaste
+FROM UTILIZA 
+RIGHT JOIN ATIVIDADE ON ATIVIDADE.id_atividade = UTILIZA.id_atividade
+LEFT JOIN EQUIPAMENTO ON UTILIZA.id_equipamento = EQUIPAMENTO.id_equipamento
+WHERE EQUIPAMENTO.desgaste IN ('Comprometido', 'Relevante')
