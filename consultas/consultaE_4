@@ -1,0 +1,16 @@
+##QUERY 4
+
+##ENUNCIADO: Para um levantamento financeiro requisitado pela gerencia geral da rede hoteleira foi pedido um saldo de gastos com funcionarios por unidade com o objetivo de mapear as unidades que gastatm mais de R$ 100.000 com funcionarios, para uma revisão de contratação e análise de redução de custos.
+
+SELECT 
+    UNIDADE.nome_fantasia,
+    UNIDADE.id_unidade,
+    SUM(SAIDA.valor_saida) AS saldo_geral
+FROM SAIDA 
+LEFT JOIN 
+  FUNCIONARIO ON SAIDA.id_funcionario = FUNCIONARIO.id_funcionario 
+LEFT JOIN 
+    UNIDADE ON FUNCIONARIO.id_unidade = UNIDADE.id_unidade
+GROUP BY UNIDADE.id_unidade
+HAVING SUM(SAIDA.valor_saida) > 100000 
+ORDER BY saldo_geral DESC
