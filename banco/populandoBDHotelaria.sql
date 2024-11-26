@@ -113,13 +113,13 @@ INSERT INTO EXTERNA (id_atividade, local, distancia) VALUES (15, 'Reserva Nacion
 INSERT INTO EXTERNA (id_atividade, local, distancia) VALUES (17, 'Praia das Conchas', 9);
 INSERT INTO EXTERNA (id_atividade, local, distancia) VALUES (19, 'Patinação WA', 5);
 
-INSERT INTO MONITOR (cpf, nome, idade, sexo, tipo, telefone) VALUES ('32947699184', 'Aaron Natal Velasques Jr.', 51, 'Feminino', 'Esporte', '11987654321');
-INSERT INTO MONITOR (cpf, nome, idade, sexo, tipo, telefone) VALUES ('80398886810', 'Thalissa Faro Gomes', 49, 'Masculino', 'Esporte', '21912345678');
+INSERT INTO MONITOR (cpf, nome, idade, sexo, tipo, telefone) VALUES ('32947699184', 'Aaron Natal Velasques Jr.', 51, 'Masculino', 'Esporte', '11987654321');
+INSERT INTO MONITOR (cpf, nome, idade, sexo, tipo, telefone) VALUES ('80398886810', 'Thalissa Faro Gomes', 49, 'Feminino', 'Esporte', '21912345678');
 INSERT INTO MONITOR (cpf, nome, idade, sexo, tipo, telefone) VALUES ('94770552441', 'Ricardo Tamoio Jr.', 46, 'Masculino', 'Dança', '31998765432');
 INSERT INTO MONITOR (cpf, nome, idade, sexo, tipo, telefone) VALUES ('98759776748', 'Adriano Esteves Branco', 29, 'Masculino', 'Teatro', '41923456789');
 INSERT INTO MONITOR (cpf, nome, idade, sexo, tipo, telefone) VALUES ('70425373945', 'Leandro Rezende Abreu Neto', 42, 'Masculino', 'Estudos', '51976543210');
 INSERT INTO MONITOR (cpf, nome, idade, sexo, tipo, telefone) VALUES ('19568172624', 'Ziraldo Santacruz', 21, 'Masculino', 'Jogos', '61934567890');
-INSERT INTO MONITOR (cpf, nome, idade, sexo, tipo, telefone) VALUES ('12025773762', 'Miranda Duarte Sobrinho', 34, 'Masculino', 'Dança', '71987123456');
+INSERT INTO MONITOR (cpf, nome, idade, sexo, tipo, telefone) VALUES ('12025773762', 'Miranda Duarte Sobrinho', 34, 'Feminino', 'Dança', '71987123456');
 
 INSERT INTO MOTORISTA (cpf, nome, telefone) VALUES ('57238896326', 'Ivana Batista Meireles', '85987654321');
 INSERT INTO MOTORISTA (cpf, nome, telefone) VALUES ('77161068065', 'Máximo Rangel Barreto', '92912345678');
