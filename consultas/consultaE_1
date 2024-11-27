@@ -1,15 +1,15 @@
-##QUERY 1 - LIKE 
+-- QUERY 1 - LIKE
 
-##ENUNCIADO: A consulta realizada abaixo busca saber qual é a Unidade da Rede Hoteleira que teve o maior fauramento em relação a pagamento de reservas no ano de 2023. O campo do resultado "faturamento_reservas" trás uma soma Do valor de entradas de reservas agrupadas por Unidade. Essa consulta é importante para a análise da saúde financeira das Unidades da Rede.
+-- ENUNCIADO:
+-- Recuperar, em ordem decrescente, o faturamento das Unidades da Rede
+-- Hoteleira apenas em relação aos pagamentos de reservas no ano de 2023.
 
-
-SELECT SUM(ENTRADA.valor_entrada) AS faturamento_reservas, 
-       UNIDADE.nome_fantasia
+SELECT UNIDADE.nome_fantasia,
+       SUM(ENTRADA.valor_entrada) AS faturamento_reservas
 FROM ENTRADA
-JOIN RESERVA ON ENTRADA.id_reserva = RESERVA.id_reserva
-JOIN ACOMODACAO ON RESERVA.id_acomodacao = ACOMODACAO.id_acomodacao
-JOIN UNIDADE ON ACOMODACAO.id_unidade = UNIDADE.id_unidade
-WHERE cast(RESERVA.per_dt_fim as varchar) LIKE '__23______'
+     JOIN RESERVA ON ENTRADA.id_reserva = RESERVA.id_reserva
+     JOIN ACOMODACAO ON RESERVA.id_acomodacao = ACOMODACAO.id_acomodacao
+     JOIN UNIDADE ON ACOMODACAO.id_unidade = UNIDADE.id_unidade
+WHERE cast(RESERVA.per_dt_fim AS varchar) LIKE '__23______'
 GROUP BY UNIDADE.nome_fantasia
-ORDER BY faturamento_reservas desc
-
+ORDER BY faturamento_reservas DESC

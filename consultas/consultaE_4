@@ -1,16 +1,13 @@
-----QUERY 4 HAVING
---Para um levantamento financeiro requisitado pela gerencia geral da rede hoteleira
---foi pedido um saldo de gastos com funcionarios por unidade
---como objetivo de mapear as unidades que gastatm mais de 100000 com funcionarios
---para uma revisão de contratação e analise de redução dos funcionarios 
+-- QUERY 4 - HAVING
 
-SELECT 
-	UNIDADE.nome_fantasia,
-    UNIDADE.id_unidade,
-    SUM(SAIDA.valor_saida) AS saldo_geral
+-- ENUNCIADO:
+-- Retornar as unidades que possuem um gasto com funcionários acima de R$100.000.
+
+SELECT UNIDADE.nome_fantasia,
+       SUM(SAIDA.valor_saida) AS saldo_geral
 FROM SAIDA 
-JOIN  FUNCIONARIO ON SAIDA.id_funcionario = FUNCIONARIO.id_funcionario 
-JOIN UNIDADE ON FUNCIONARIO.id_unidade = UNIDADE.id_unidade
-GROUP BY  UNIDADE.id_unidade
+     JOIN FUNCIONARIO ON SAIDA.id_funcionario = FUNCIONARIO.id_funcionario 
+     JOIN UNIDADE ON FUNCIONARIO.id_unidade = UNIDADE.id_unidade
+GROUP BY UNIDADE.id_unidade
 HAVING SUM(SAIDA.valor_saida) > 100000 
 ORDER BY saldo_geral DESC;

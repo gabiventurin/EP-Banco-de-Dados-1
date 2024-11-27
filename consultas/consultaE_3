@@ -1,9 +1,11 @@
-##QUERY 3 - LEFT OU RIGHT JOIN
+-- QUERY 3 - LEFT OU RIGHT JOIN
 
-##ENUNCIADO: A Rede Hoteleira deseja inserir novas atividades em suas Unidades, visando diminuir os custos da implementação foi necessário consultar os equipamentos que existiam porém não estavam sendo utilizados para nenhuma atividade, assim a criação de novas atividades podem ser escolhidass visando utilizar os equpamentos ja existentes.
+-- ENUNCIADO:
+-- Listar equipamentos que não estavam sendo utilizados para nenhuma atividade.
 
-SELECT EQUIPAMENTO.nome as nome_equipamento, EQUIPAMENTO.quantidade, EQUIPAMENTO.desgaste,
-ATIVIDADE.nome as atividade
-from ATIVIDADE
-JOIN UTILIZA on utiliza.id_atividade = ATIVIDADE.id_atividade
-RIGHT JOIN EQUIPAMENTO on equipamento.id_equipamento = utiliza.id_equipamento
+SELECT EQUIPAMENTO.nome AS nome_equipamento,
+       EQUIPAMENTO.quantidade, EQUIPAMENTO.desgaste,
+       ATIVIDADE.nome AS atividade
+FROM ATIVIDADE
+     JOIN UTILIZA ON utiliza.id_atividade = ATIVIDADE.id_atividade
+     RIGHT JOIN EQUIPAMENTO ON equipamento.id_equipamento = utiliza.id_equipamento

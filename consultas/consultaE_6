@@ -1,9 +1,13 @@
-##QUERY 6 - Uma relação com dois papéis 
+-- QUERY 6 - Uma relação com dois papéis 
 
-##ENUNCIADO: A Consulta a seguir é resultado de uma solicitação do Sistema de Gerenciamento de Recurso Humanos da Rede Hoteleira que pediu um levantamento da proporção de monitores de atividades do sexo masculino e feminino, o objetivo é saber quais atividades tem tanto monitores homens quanto mulheres, buscando possivelmente  uma posterior igualdade  de gênero na distribuição dos mesmos.
+-- ENUNCIADO:
+-- Listar atividades que possuem monitores tanto masculino quanto feminino.
 
-SELECT 
-	f.nome AS Monitora, m.nome AS Monitor, f.tipo AS tipo_de_capacitacao
+SELECT f.nome AS Monitora,
+       m.nome AS Monitor,
+	   f.tipo AS tipo_de_capacitacao
 FROM monitor AS f, monitor as m 
-WHERE f.sexo = 'Feminino' AND m.sexo = 'Masculino'
-AND f.tipo ='Esporte' AND m.tipo = f.tipo
+WHERE f.sexo = 'Feminino'
+      AND m.sexo = 'Masculino'
+	  AND f.tipo ='Esporte'
+	  AND m.tipo = f.tipo

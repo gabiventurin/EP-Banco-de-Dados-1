@@ -1,18 +1,18 @@
-##QUERY 2 - IN ou ALL 
+-- QUERY 2 - IN ou ALL
 
-##ENUNCIADO: A consulta abaixo utiliza a cláusula IN para localizar
-uma acomodação livre especificada por uma família que busca se hospedar na Rede Hoteleira com os seus filhos, para isso eles buscam amenidades de acomodações para suprir o interesse das crianças, como VideoGame, Streaming, Internet e TV a cabo em alguma Unidade que seja do Setor de Família ou Beira-Mar.
+-- ENUNCIADO:
+-- Recuperar acomodações livres que possuem amenidades como Video Game,
+-- Streaming, Internet e/ou TV a cabo de alguma Unidade que seja do Setor
+-- de Família ou Beira_Mar.
 
 SELECT UNIDADE.nome_fantasia, ACOMODACAO.*, 
-	   AMENIDADE.tipo as Amenidade, AMENIDADE.manutencao as Manutencao_Amenidade
-FROM
-UNIDADE JOIN ACOMODACAO ON UNIDADE.id_unidade=ACOMODACAO.id_unidade
-JOIN AMENIDADE ON ACOMODACAO.id_acomodacao = AMENIDADE.id_acomodacao
+       AMENIDADE.tipo AS Amenidade,
+       AMENIDADE.manutencao AS Manutencao_Amenidade
+FROM UNIDADE
+     JOIN ACOMODACAO ON UNIDADE.id_unidade=ACOMODACAO.id_unidade
+     JOIN AMENIDADE ON ACOMODACAO.id_acomodacao = AMENIDADE.id_acomodacao
 WHERE AMENIDADE.tipo IN ('videogame', 'Streaming', 'Internet', 'TV a cabo') 
-   AND UNIDADE.setor IN ('Família', 'Beira-Mar') 
-   AND ACOMODACAO.status = 'true'
-   AND ACOMODACAO.limpeza = 'false'
-   AND AMENIDADE.manutencao ='false'
-   
-   
-   
+      AND UNIDADE.setor IN ('Família', 'Beira-Mar')
+      AND ACOMODACAO.status = 'true'
+      AND ACOMODACAO.limpeza = 'false'
+      AND AMENIDADE.manutencao ='false'
