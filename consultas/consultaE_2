@@ -6,8 +6,8 @@ uma acomodação livre especificada por uma família que busca se hospedar na Re
 SELECT UNIDADE.nome_fantasia, ACOMODACAO.*, 
 	   AMENIDADE.tipo as Amenidade, AMENIDADE.manutencao as Manutencao_Amenidade
 FROM
-UNIDADE LEFT JOIN ACOMODACAO ON UNIDADE.id_unidade=ACOMODACAO.id_unidade
-LEFT JOIN AMENIDADE ON ACOMODACAO.id_acomodacao = AMENIDADE.id_acomodacao
+UNIDADE JOIN ACOMODACAO ON UNIDADE.id_unidade=ACOMODACAO.id_unidade
+JOIN AMENIDADE ON ACOMODACAO.id_acomodacao = AMENIDADE.id_acomodacao
 WHERE AMENIDADE.tipo IN ('videogame', 'Streaming', 'Internet', 'TV a cabo') 
    AND UNIDADE.setor IN ('Família', 'Beira-Mar') 
    AND ACOMODACAO.status = 'true'

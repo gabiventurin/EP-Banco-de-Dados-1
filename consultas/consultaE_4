@@ -1,16 +1,14 @@
-##QUERY 4
+##QUERY 4 IN ou ALL
 
 ##ENUNCIADO: Para um levantamento financeiro requisitado pela gerencia geral da rede hoteleira foi pedido um saldo de gastos com funcionarios por unidade com o objetivo de mapear as unidades que gastatm mais de R$ 100.000 com funcionarios, para uma revisão de contratação e análise de redução de custos.
 
-SELECT 
-    UNIDADE.nome_fantasia,
-    UNIDADE.id_unidade,
-    SUM(SAIDA.valor_saida) AS saldo_geral
-FROM SAIDA 
-LEFT JOIN 
-  FUNCIONARIO ON SAIDA.id_funcionario = FUNCIONARIO.id_funcionario 
-LEFT JOIN 
-    UNIDADE ON FUNCIONARIO.id_unidade = UNIDADE.id_unidade
-GROUP BY UNIDADE.id_unidade
-HAVING SUM(SAIDA.valor_saida) > 100000 
-ORDER BY saldo_geral DESC
+SELECT UNIDADE.nome_fantasia, ACOMODACAO.*, 
+	   AMENIDADE.tipo as Amenidade, AMENIDADE.manutencao as Manutencao_Amenidade
+FROM
+UNIDADE JOIN ACOMODACAO ON UNIDADE.id_unidade=ACOMODACAO.id_unidade
+JOIN AMENIDADE ON ACOMODACAO.id_acomodacao = AMENIDADE.id_acomodacao
+WHERE AMENIDADE.tipo IN ('videogame', 'Streaming', 'Internet', 'TV a cabo') 
+   AND UNIDADE.setor IN ('Família', 'Beira-Mar') 
+   AND ACOMODACAO.status = 'true'
+   AND ACOMODACAO.limpeza = 'false'
+   AND AMENIDADE.manutencao ='false'

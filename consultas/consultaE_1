@@ -4,11 +4,12 @@
 
 
 SELECT SUM(ENTRADA.valor_entrada) AS faturamento_reservas, 
-       UNIDADE.nome_fantasia, UNIDADE.id_unidade
+       UNIDADE.nome_fantasia
 FROM ENTRADA
-LEFT JOIN RESERVA ON ENTRADA.id_reserva = RESERVA.id_reserva
-LEFT JOIN ACOMODACAO ON RESERVA.id_acomodacao = ACOMODACAO.id_acomodacao
-LEFT JOIN UNIDADE ON ACOMODACAO.id_unidade = UNIDADE.id_unidade
+JOIN RESERVA ON ENTRADA.id_reserva = RESERVA.id_reserva
+JOIN ACOMODACAO ON RESERVA.id_acomodacao = ACOMODACAO.id_acomodacao
+JOIN UNIDADE ON ACOMODACAO.id_unidade = UNIDADE.id_unidade
 WHERE cast(RESERVA.per_dt_fim as varchar) LIKE '__23______'
-GROUP BY UNIDADE.nome_fantasia, UNIDADE.id_unidade;
+GROUP BY UNIDADE.nome_fantasia
+ORDER BY faturamento_reservas desc
 
