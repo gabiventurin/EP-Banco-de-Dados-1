@@ -1,0 +1,50 @@
+﻿@page "/avalia"
+@using Microsoft.EntityFrameworkCore
+@using Microsoft.AspNetCore.Components.QuickGrid
+@using Hotelaria.Data.Models
+@using Hotelaria.Services
+@rendermode InteractiveServer
+@implements IAsyncDisposable
+@inject AvaliaService _service
+
+<PageTitle>Index</PageTitle>
+
+<h1>Index</h1>
+
+<p>
+    <a class="btn btn-success btn-sm" href="avalia/create">Create New</a>
+</p>
+<QuickGrid Class="table" Items="avaliacoes" TGridItem="Avalia">
+    <PropertyColumn Property="avalia => avalia.Nota" Title="Nota" />
+    <PropertyColumn Property="avalia => avalia.Comentario" Title="Comentário" />
+    <PropertyColumn Property="avalia => avalia.DataAvaliacao" Title="Data de Avaliação" />
+
+    <TemplateColumn Context="avalia">
+        <a class="btn btn-primary btn-sm" href="@($"avalia/edit?idhospede={avalia.IdHospede}&idatividade={avalia.IdAtividade}")">Edit</a>
+        <a class="btn btn-info btn-sm" href="@($"avalia/details?idhospede={avalia.IdHospede}&idatividade={avalia.IdAtividade}")">Details</a>
+        <a class="btn btn-danger btn-sm" href="@($"avalia/delete?idhospede={avalia.IdHospede}&idatividade={avalia.IdAtividade}")">Delete</a>
+    </TemplateColumn>
+</QuickGrid>
+
+@code {
+    private IQueryable<Avalia>? avaliacoes = Enumerable.Empty<Avalia>().AsQueryable();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadAvaliacoesAsync();
+    }
+
+    private async Task LoadAvaliacoesAsync()
+    {
+        avaliacoes = (await _service.FindAllAsync()).AsQueryable();
+    }
+
+    private async Task ApplyFilter()
+    {
+        await LoadAvaliacoesAsync();
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+    }
+}

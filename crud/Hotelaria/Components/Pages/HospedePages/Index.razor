@@ -1,0 +1,34 @@
+﻿@page "/hospedes"
+@using Microsoft.EntityFrameworkCore
+@using Microsoft.AspNetCore.Components.QuickGrid
+@using Hotelaria.Data.Models
+@using Hotelaria.Data
+@using Hotelaria.Services
+@inject HospedeService _hospedeService
+
+<PageTitle>Index</PageTitle>
+
+<h1>Index</h1>
+
+<p>
+    <a class="btn btn-success btn-sm" href="hospedes/create">Create New</a>
+</p>
+
+<QuickGrid Class="table" Items="Hospedes">
+    <PropertyColumn Property="hospede => hospede.Cpf" />
+    <PropertyColumn Property="hospede => hospede.IdReserva" />
+
+    <TemplateColumn Context="hospede">
+        <a class="btn btn-primary btn-sm" href="@($"hospedes/edit?idhospede={hospede.IdHospede}")">Edit</a>
+        <a class="btn btn-danger btn-sm" href="@($"hospedes/delete?idhospede={hospede.IdHospede}")">Delete</a>
+    </TemplateColumn>
+</QuickGrid>
+
+@code {
+    private IQueryable<Hospede> Hospedes = Enumerable.Empty<Hospede>().AsQueryable();
+
+    protected async override Task OnInitializedAsync()
+    {
+        Hospedes = (await _hospedeService.FindAllAsync()).AsQueryable();
+    }
+}

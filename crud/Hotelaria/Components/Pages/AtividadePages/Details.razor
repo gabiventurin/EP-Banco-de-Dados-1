@@ -1,0 +1,69 @@
+﻿@page "/atividades/details"
+@using Microsoft.EntityFrameworkCore
+@using Hotelaria.Data.Models
+@using Hotelaria.Services
+@inject ParceiroService _parceiroService
+@inject AtividadeService _atividadeService
+@inject NavigationManager NavigationManager
+
+<PageTitle>Details</PageTitle>
+
+<h1>Details</h1>
+
+<div>
+    <h2>Atividade</h2>
+    <hr />
+    @if (atividade is null)
+    {
+        <p><em>Loading...</em></p>
+    }
+    else {
+        <dl class="row">
+            <dt class="col-sm-2">Nome</dt>
+            <dd class="col-sm-10">@atividade.Nome</dd>
+            <dt class="col-sm-2">Tipo</dt>
+            <dd class="col-sm-10">@atividade.Tipo</dd>
+            <dt class="col-sm-2">IdadeMin</dt>
+            <dd class="col-sm-10">@atividade.IdadeMin</dd>
+            <dt class="col-sm-2">IdadeMax</dt>
+            <dd class="col-sm-10">@atividade.IdadeMax</dd>
+            <dt class="col-sm-2">DataAtv</dt>
+            <dd class="col-sm-10">@atividade.DataAtv</dd>
+            <dt class="col-sm-2">Sazonalidade</dt>
+            <dd class="col-sm-10">@atividade.Sazonalidade</dd>
+            <dt class="col-sm-2">Duracao</dt>
+            <dd class="col-sm-10">@atividade.Duracao</dd>
+            <dt class="col-sm-2">CapacidadeMax</dt>
+            <dd class="col-sm-10">@atividade.CapacidadeMax</dd>
+            <dt class="col-sm-2">Parceiro</dt>
+            <dd class="col-sm-10">@NomeParceiro</dd>
+        </dl>
+        <div>
+            <a class="btn btn-primary btn-sm" href="@($"/atividades/edit?idatividade={atividade.IdAtividade}")">Edit</a>
+            <a class="btn btn-secondary" href="@($"/atividades")">Back to List</a>
+        </div>
+    }
+</div>
+
+@code {
+    private Atividade? atividade;
+
+    [SupplyParameterFromQuery]
+    private int IdAtividade { get; set; }
+
+    private string NomeParceiro { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        atividade = _atividadeService.Find(IdAtividade);
+
+        if (atividade == null) return;
+
+        NomeParceiro = _parceiroService.GetParceiro(atividade.IdParceiro)?.Nome ?? string.Empty;
+
+        if (atividade is null)
+        {
+            NavigationManager.NavigateTo("notfound");
+        }
+    }
+}

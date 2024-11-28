@@ -1,0 +1,112 @@
+﻿@page "/atividades/delete"
+@using Microsoft.EntityFrameworkCore
+@using Hotelaria.Data.Models
+@using Hotelaria.Services
+@using Npgsql
+@inject AtividadeService _atividadeService
+@inject NavigationManager NavigationManager
+
+<PageTitle>Delete</PageTitle>
+
+<h1>Delete</h1>
+
+<p>Are you sure you want to delete this?</p>
+<div>
+    <h2>Atividade</h2>
+    <hr />
+    @if (atividade is null)
+    {
+        <p><em>Loading...</em></p>
+    }
+    else {
+        <dl class="row">
+            <dt class="col-sm-2">Nome</dt>
+            <dd class="col-sm-10">@atividade.Nome</dd>
+        </dl>
+        <dl class="row">
+            <dt class="col-sm-2">Tipo</dt>
+            <dd class="col-sm-10">@atividade.Tipo</dd>
+        </dl>
+        <dl class="row">
+            <dt class="col-sm-2">IdadeMin</dt>
+            <dd class="col-sm-10">@atividade.IdadeMin</dd>
+        </dl>
+        <dl class="row">
+            <dt class="col-sm-2">IdadeMax</dt>
+            <dd class="col-sm-10">@atividade.IdadeMax</dd>
+        </dl>
+        <dl class="row">
+            <dt class="col-sm-2">DataAtv</dt>
+            <dd class="col-sm-10">@atividade.DataAtv</dd>
+        </dl>
+        <dl class="row">
+            <dt class="col-sm-2">Sazonalidade</dt>
+            <dd class="col-sm-10">@atividade.Sazonalidade</dd>
+        </dl>
+        <dl class="row">
+            <dt class="col-sm-2">Duracao</dt>
+            <dd class="col-sm-10">@atividade.Duracao</dd>
+        </dl>
+        <dl class="row">
+            <dt class="col-sm-2">CapacidadeMax</dt>
+            <dd class="col-sm-10">@atividade.CapacidadeMax</dd>
+        </dl>
+        <dl class="row">
+            <dt class="col-sm-2">IdParceiro</dt>
+            <dd class="col-sm-10">@atividade.IdParceiro</dd>
+        </dl>
+        <dl class="row">
+            <dt class="col-sm-2">IdUnidade</dt>
+            <dd class="col-sm-10">@atividade.IdUnidade</dd>
+        </dl>
+        <EditForm method="post" Model="atividade" OnValidSubmit="DeleteAtividade" FormName="delete" Enhance>
+            <button type="submit" class="btn btn-danger" disabled="@(atividade is null)">Delete</button> |
+            <a class="btn btn-secondary" href="/atividades">Back to List</a>
+        </EditForm>
+    }
+</div>
+
+@if (Exception != string.Empty)
+{
+    <div class="alert-danger">@Exception</div>
+}
+
+@code {
+    private Atividade? atividade;
+
+    [SupplyParameterFromQuery]
+    private int IdAtividade { get; set; }
+
+    private string Exception { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        atividade = _atividadeService.Find(IdAtividade);
+
+        if (atividade is null)
+        {
+            NavigationManager.NavigateTo("notfound");
+        }
+    }
+
+    private async Task DeleteAtividade()
+    {
+        bool needsNavigation = false;
+        try
+        {
+            await _atividadeService.DeleteAsync(IdAtividade);
+            needsNavigation = true;
+        }
+        catch (DbUpdateException ex)
+        {
+            if (ex.InnerException is PostgresException)
+                Exception = "Não é possível remover atividades com avaliações!";
+            else Exception = ex.Message;
+        }
+
+        if (needsNavigation)
+        {
+            NavigationManager.NavigateTo("/atividades");
+        }
+    }
+}

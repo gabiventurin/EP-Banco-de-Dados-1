@@ -1,0 +1,24 @@
+version: '3.9'
+
+services:
+  postgres:
+    image: postgres:latest
+    container_name: postgres_db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: root
+      POSTGRES_DB: hotelaria
+    ports:
+      - "5431:5432"
+    volumes:
+      - ./init:/docker-entrypoint-initdb.d
+
+  webapp:
+    image: dimidimii/hotelariaapp:v1.2
+    container_name: web_app
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+    ports:
+      - "8100:8080"
+    depends_on:
+      - postgres

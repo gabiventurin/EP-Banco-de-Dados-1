@@ -1,0 +1,70 @@
+﻿@page "/avalia/details"
+@using Hotelaria.Data
+@using Microsoft.EntityFrameworkCore
+@using Hotelaria.Data.Models
+@using Hotelaria.Services
+@inject AvaliaService _service
+@inject NavigationManager NavigationManager
+
+<PageTitle>Details</PageTitle>
+
+<h1>Details</h1>
+
+<div>
+    <h2>Avalia</h2>
+    <hr />
+    @if (avalia is null)
+    {
+        <p><em>Loading...</em></p>
+    }
+    else {
+        <dl class="row">
+            <dt class="col-sm-2">Nota</dt>
+            <dd class="col-sm-10">@avalia.Nota</dd>
+
+            <dt class="col-sm-2">Comentário</dt>
+            <dd class="col-sm-10">@avalia.Comentario</dd>
+
+            <dt class="col-sm-2">Data da avaliação</dt>
+            <dd class="col-sm-10">@avalia.DataAvaliacao</dd>
+
+            <dt class="col-sm-2">Hospede</dt>
+            <dd class="col-sm-10">@HospedeCpf</dd>
+
+            <dt class="col-sm-2">Atividade</dt>
+            <dd class="col-sm-10">@AtividadeNome</dd>
+        </dl>
+        <div>
+            <a class="btn btn-primary btn-sm" href="@($"/avalia/edit?idhospede={avalia.IdHospede}&idatividade={avalia.IdAtividade}")">Edit</a>
+            <a class="btn btn-secondary" href="@($"/avalia")">Back to List</a>
+        </div>
+    }
+</div>
+
+@code {
+    private Avalia? avalia;
+
+    [SupplyParameterFromQuery]
+    private int IdAtividade { get; set; }
+
+    [SupplyParameterFromQuery]
+    private int IdHospede { get; set; }
+
+    private string AtividadeNome { get; set; } = string.Empty;
+
+    private string HospedeCpf { get; set; } = string.Empty;
+
+    protected override async Task OnInitializedAsync()
+    {
+        avalia = await _service.FindByPk(IdAtividade, IdHospede);
+
+        var tuple = await _service.GetHospedeAndAtividade(IdAtividade, IdHospede);
+        AtividadeNome = tuple.Item1;
+        HospedeCpf = tuple.Item2;
+
+        if (avalia is null)
+        {
+            NavigationManager.NavigateTo("notfound");
+        }
+    }
+}

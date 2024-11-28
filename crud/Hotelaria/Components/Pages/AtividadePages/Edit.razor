@@ -1,0 +1,182 @@
+﻿@page "/atividades/edit"
+@using Microsoft.EntityFrameworkCore
+@using Hotelaria.Data.Models
+@using Hotelaria.Services
+@using Hotelaria.Services.ViewModel
+@using Hotelaria.Services.Enum
+@using Hotelaria.Helpers
+@inject ParceiroService _parceiroService
+@inject AtividadeService _atividadeService
+@inject NavigationManager NavigationManager
+
+<PageTitle>Edit</PageTitle>
+
+<h1>Edit</h1>
+
+<h2>Atividade</h2>
+<hr />
+@if (Atividade is null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <div class="row">
+        <div class="col-md-4">
+            <EditForm method="post" Model="Atividade" OnValidSubmit="UpdateAtividade" FormName="edit" Enhance>
+                <DataAnnotationsValidator />
+                <ValidationSummary role="alert"/>
+                <input type="hidden" name="Atividade.IdAtividade" value="@Atividade.IdAtividade" />
+                <div class="mb-3">
+                    <label for="nome" class="form-label">Nome:</label>
+                    <InputText id="nome" @bind-Value="Atividade.Nome" class="form-control" />
+                    <ValidationMessage For="() => Atividade.Nome" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="tipo" class="form-label">Tipo:</label>
+                    <InputSelect id="tipo" @bind-Value="Atividade.Tipo" class="form-control">
+                        @foreach (var tipo in Enum.GetValues(typeof(AtividadeTipoEnum)).Cast<AtividadeTipoEnum>())
+                        {
+                            <option value="@tipo">@tipo.GetDisplayName()</option>
+                        }
+                    </InputSelect>
+                    <ValidationMessage For="() => Atividade.Sazonalidade" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="idademin" class="form-label">IdadeMin:</label>
+                    <InputNumber id="idademin" @bind-Value="Atividade.IdadeMin" class="form-control" />
+                    <ValidationMessage For="() => Atividade.IdadeMin" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="idademax" class="form-label">IdadeMax:</label>
+                    <InputNumber id="idademax" @bind-Value="Atividade.IdadeMax" class="form-control" />
+                    <ValidationMessage For="() => Atividade.IdadeMax" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="dataatv" class="form-label">DataAtv:</label>
+                    <InputDate id="dataatv" @bind-Value="Atividade.DataAtv" class="form-control" />
+                    <ValidationMessage For="() => Atividade.DataAtv" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="sazonalidade" class="form-label">Sazonalidade:</label>
+                    <InputSelect id="sazonalidade" @bind-Value="Atividade.Sazonalidade" class="form-control">
+                        @foreach (var sazonalidade in Sazonalidades)
+                        {
+                            <option value="@sazonalidade">@sazonalidade</option>
+                        }
+                    </InputSelect>
+                    <ValidationMessage For="() => Atividade.Sazonalidade" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="duracao" class="form-label">Duracao:</label>
+                    <InputNumber id="duracao" @bind-Value="Atividade.Duracao" class="form-control" />
+                    <ValidationMessage For="() => Atividade.Duracao" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="capacidademax" class="form-label">CapacidadeMax:</label>
+                    <InputNumber id="capacidademax" @bind-Value="Atividade.CapacidadeMax" class="form-control" />
+                    <ValidationMessage For="() => Atividade.CapacidadeMax" class="text-danger" />
+                </div>
+
+                <div class="mb-3">
+                    <label for="idparceiro" class="form-label">Parceiro:</label>
+                    <InputSelect id="idparceiro" @bind-Value="Atividade.IdParceiro" class="form-control">
+                        <option value="" disabled>Select an option</option>
+                        @foreach (var parceiro in Parceiros)
+                        {
+                            <option value="@parceiro.IdParceiro">@parceiro.Nome</option>
+                        }
+                    </InputSelect>
+                    <ValidationMessage For="() => Atividade.IdParceiro" class="text-danger" />
+                </div>
+
+                <button type="submit" class="btn btn-primary">Save</button>
+            </EditForm>
+        </div>
+    </div>
+}
+
+@if (Exception != string.Empty)
+{
+    <div class="alert-danger">@Exception</div>
+}
+
+<div>
+    <a class="btn btn-secondary" href="/atividades">Back to List</a>
+</div>
+
+@code {
+    [SupplyParameterFromQuery]
+    private int IdAtividade { get; set; }
+
+    [SupplyParameterFromForm]
+    private AtividadeViewModel? Atividade { get; set; }
+
+    private string Exception { get; set; } = string.Empty;
+
+    private List<Parceiro> Parceiros { get; set; } = new();
+
+    private string[] Sazonalidades { get; set; }
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        Sazonalidades = Enum.GetNames(typeof(SazonalidadeEnum));
+        Parceiros = (await _parceiroService.GetParceirosAsync()).ToList();
+
+        var atv = _atividadeService.Find(IdAtividade);
+
+        if (Atividade == null) Atividade = new AtividadeViewModel
+            {
+                IdAtividade = atv.IdAtividade,
+                Nome = atv.Nome,
+                Tipo = atv.Tipo,
+                IdadeMin = atv.IdadeMin,
+                IdadeMax = atv.IdadeMax,
+                DataAtv = atv.DataAtv,
+                Sazonalidade = atv.Sazonalidade,
+                Duracao = atv.Duracao,
+                CapacidadeMax = atv.CapacidadeMax,
+                IdParceiro = atv.IdParceiro,
+                IdUnidade = atv.IdUnidade
+            };
+
+        if (Atividade is null)
+        {
+            NavigationManager.NavigateTo("notfound");
+        }
+    }
+
+    private async Task UpdateAtividade()
+    {
+        bool needNavigate = false;
+        try
+        {
+            if (Atividade == null) return;
+
+            var atv = new Atividade
+                {
+                    IdAtividade = Atividade.IdAtividade,
+                    Nome = Atividade.Nome,
+                    Tipo = Atividade.Tipo,
+                    IdadeMin = Atividade.IdadeMin,
+                    IdadeMax = Atividade.IdadeMax,
+                    DataAtv = Atividade.DataAtv,
+                    Sazonalidade = Atividade.Sazonalidade,
+                    Duracao = Atividade.Duracao,
+                    CapacidadeMax = Atividade.CapacidadeMax,
+                    IdParceiro = Atividade.IdParceiro,
+                    IdUnidade = 1
+                };
+
+            await _atividadeService.UpdateAsync(atv);
+            needNavigate = true;
+        }
+        catch (Exception ex)
+        {
+            Exception = ex.Message;
+        }
+
+        if (needNavigate) NavigationManager.NavigateTo("/atividades");
+    }
+}

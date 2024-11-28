@@ -1,0 +1,133 @@
+﻿@page "/avalia/edit"
+@using Microsoft.EntityFrameworkCore
+@using Hotelaria.Data.Models
+@using Hotelaria.Data
+@using Hotelaria.Services;
+@inject AvaliaService _avaliaService
+@inject AtividadeService _atividadeService
+@inject HospedeService _hospedeService
+@inject NavigationManager NavigationManager
+
+<PageTitle>Edit</PageTitle>
+
+<h1>Edit</h1>
+
+<h2>Avalia</h2>
+<hr />
+@if (Avalia is null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <div class="row">
+        <div class="col-md-4">
+            <EditForm method="post" Model="Avalia" OnValidSubmit="UpdateAvalia" FormName="edit">
+                <DataAnnotationsValidator />
+                <ValidationSummary role="alert"/>
+                <input type="hidden" name="Avalia.IdHospede" value="@Avalia.IdHospede" />
+                <div class="mb-3">
+                    <label for="nota" class="form-label">Nota:</label>
+                    <InputNumber id="nota" @bind-Value="Avalia.Nota" class="form-control" min="0" max="10" />
+                </div>
+                <div class="mb-3">
+                    <label for="comentario" class="form-label">Comentario:</label>
+                    <InputText id="comentario" @bind-Value="Avalia.Comentario" class="form-control" />
+                    <ValidationMessage For="() => Avalia.Comentario" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="dataavaliacao" class="form-label">DataAvaliacao:</label>
+                    <InputDate id="dataavaliacao" @bind-Value="Avalia.DataAvaliacao" class="form-control" />
+                    <ValidationMessage For="() => Avalia.DataAvaliacao" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="idhospede" class="form-label">IdHospede:</label>
+                    <InputSelect id="idhospede" @bind-Value="Avalia.IdHospede" onchange="ChangeAtividades" class="form-control">
+                        <option value="" disabled>Select an option</option>
+                        @foreach (var hospede in Hospedes)
+                        {
+                            <option value="@hospede.IdHospede">@hospede.Cpf</option>
+                        }
+                    </InputSelect>
+                    <ValidationMessage For="() => Avalia.IdHospede" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="idatividade" class="form-label">Atividade:</label>
+                    <InputSelect id="idatividade" @bind-Value="Avalia.IdAtividade" class="form-control">
+                        <option value="" disabled>Select an option</option>
+                        @foreach (var atividade in Atividades)
+                        {
+                            <option value="@atividade.IdAtividade">@atividade.Nome</option>
+                        }
+                    </InputSelect>
+                    <ValidationMessage For="() => Avalia.IdAtividade" class="text-danger" />
+                </div>
+
+                <button type="submit" class="btn btn-primary">Save</button>
+            </EditForm>
+        </div>
+    </div>
+}
+
+<div>
+    <a class="btn btn-secondary" href="/avalia">Back to List</a>
+</div>
+
+@code {
+    [SupplyParameterFromQuery]
+    private int IdHospede { get; set; }
+
+    [SupplyParameterFromQuery]
+    private int IdAtividade { get; set; }
+
+    [SupplyParameterFromForm]
+    private Avalia? Avalia { get; set; }
+
+    private List<Atividade> Atividades { get; set; } = new();
+
+    private List<Hospede> Hospedes { get; set; } = new();
+
+    private string Exception { get; set; } = string.Empty;
+
+    protected void ChangeAtividades()
+    {
+        if (Avalia == null) return;
+
+        Atividades = _atividadeService.FindByHospede(Avalia.IdHospede).ToList();
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        Atividades = (await _atividadeService.FindAllAsync()).ToList();
+        Hospedes = (await _hospedeService.FindAllAsync()).ToList();
+
+        if (Avalia == null) Avalia = await _avaliaService.FindByPk(IdAtividade, IdHospede);
+
+        if (Avalia is null)
+        {
+            NavigationManager.NavigateTo("notfound");
+        }
+    }
+    private async Task UpdateAvalia()
+    {
+        if (Avalia == null) return;
+
+        bool needsNavigation = false;
+        try
+        {
+            await _avaliaService.UpdateAsync(Avalia);
+            Exception = string.Empty;
+            await Task.Delay(100);
+            needsNavigation = true;
+        }
+        catch (Exception ex)
+        {
+            Exception = ex.Message;
+        }
+
+        if (needsNavigation)
+        {
+            NavigationManager.NavigateTo("/avalia");
+        }
+    }
+}

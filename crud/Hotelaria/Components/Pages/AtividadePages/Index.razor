@@ -1,0 +1,45 @@
+﻿@page "/atividades"
+@using Microsoft.EntityFrameworkCore
+@using Microsoft.AspNetCore.Components.QuickGrid
+@using Hotelaria.Data.Models
+@using Hotelaria.Data
+@using Hotelaria.Services
+@inject AtividadeService _atividadeService
+
+<PageTitle>Index</PageTitle>
+
+<h1>Index</h1>
+
+<p>
+    <a class="btn btn-success btn-sm" href="atividades/create">Create New</a>
+</p>
+
+<QuickGrid Class="table" Items="Atividades" TGridItem="Atividade">
+    <PropertyColumn Property="atividade => atividade.Nome" />
+    <PropertyColumn Property="atividade => atividade.Tipo" />
+    @*     <PropertyColumn Property="atividade => atividade.IdadeMin" />
+    <PropertyColumn Property="atividade => atividade.IdadeMax" /> *@
+    <PropertyColumn Property="atividade => atividade.DataAtv" />
+    <PropertyColumn Property="atividade => atividade.Sazonalidade" />
+    <PropertyColumn Property="atividade => atividade.Duracao" />
+    <PropertyColumn Property="atividade => atividade.CapacidadeMax" />
+    @*     <PropertyColumn Property="atividade => atividade.IdParceiro" />
+    <PropertyColumn Property="atividade => atividade.IdUnidade" /> *@
+
+    <TemplateColumn Context="atividade">
+        <a class="btn btn-primary btn-sm" href="@($"atividades/edit?idatividade={atividade.IdAtividade}")">Edit</a>
+        <a class="btn btn-info btn-sm" href="@($"atividades/details?idatividade={atividade.IdAtividade}")">Details</a>
+        <a class="btn btn-danger btn-sm" href="@($"atividades/delete?idatividade={atividade.IdAtividade}")">Delete</a>
+    </TemplateColumn>
+</QuickGrid>
+
+@code {
+    private IQueryable<Atividade> Atividades = Enumerable.Empty<Atividade>().AsQueryable();
+
+    private Atividade teste = new();
+
+    protected async override Task OnInitializedAsync()
+    {
+        Atividades = (await _atividadeService.FindAllAsync()).AsQueryable();
+    }
+}
