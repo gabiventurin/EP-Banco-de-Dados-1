@@ -9,5 +9,4 @@ SELECT f.nome AS Monitora,
 FROM monitor AS f, monitor as m 
 WHERE f.sexo = 'Feminino'
       AND m.sexo = 'Masculino'
-	  AND f.tipo ='Esporte'
-	  AND m.tipo = f.tipo
+      AND m.tipo = f.tipo
